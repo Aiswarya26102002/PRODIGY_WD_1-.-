@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Navigation Menu</title>
+<style>
+  /* Styling for the navigation menu */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: whitesmoke;
+  }
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: transparent; /* transparent background initially */
+    z-index: 1000; /* ensure the menu is above other content */
+    transition: background-color 0.5s ease; /* smooth transition effect */
+  }
+  .navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  .navbar li {
+    display: inline-block;
+    margin: 0 20px;
+    position: relative;
+    transition: transform 0.3s ease; /* smooth transition effect */
+  }
+  .navbar li a {
+    display: block;
+    padding: 20px;
+    text-decoration: none;
+    color: #333; /* default font color */
+    transition: color 0.3s ease; /* smooth transition effect */
+  }
+  .navbar li::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #333;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: bottom right;
+  }
+  .navbar li:hover::before {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+  .navbar li a:hover {
+    color: #555; /* font color on hover */
+    transition: color 0.3s ease, transform 0.3s ease; /* smoother transition */
+  }
+</style>
+</head>
+<body>
+
+<div class="navbar" id="navbar">
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#News">News</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#Help">Help</a></li>
+  </ul>
+</div>
+
+<div style="height: 2001px;">
+  <!-- Some content to make the page scrollable -->
+  Scroll down to see the effect...
+</div>
+
+<script>
+  window.addEventListener('scroll', function() {
+    const navbar = document.getElementById('navbar');
+    const scrollPosition = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercentage = (scrollPosition / maxScroll) * 100;
+    const backgroundColor = `hsl(${scrollPercentage * 3.6}, 100%, 50%)`; // Gradual change of background color
+
+    navbar.style.backgroundColor = backgroundColor;
+
+    const navbarItems = document.querySelectorAll('.navbar li');
+    navbarItems.forEach(item => {
+      const bounding = item.getBoundingClientRect();
+      const itemScrollPosition = bounding.top + window.scrollY;
+      const scaleValue = Math.max(1 - (scrollPosition - itemScrollPosition) / 400, 0.8); // Parallax effect
+      item.style.transform = `scale(${scaleValue})`;
+    });
+  });
+
+  // Change font color dynamically when hovering over menu items
+  const navbarLinks = document.querySelectorAll('.navbar li a');
+  navbarLinks.forEach(link => {
+    link.addEventListener('mouseover', function() {
+      const randomColor = getRandomColor();
+      this.style.color = randomColor; /* change font color on hover */
+    });
+    link.addEventListener('mouseout', function() {
+      this.style.color = '#334'; /* revert font color when mouseout */
+    });
+  });
+
+  // Function to generate random color
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+</script>
+
+</body>
+</html>
